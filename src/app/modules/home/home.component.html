@@ -13,6 +13,14 @@
         <input type="text" formControlName="identificationNumber">
       </div>
       <div class="form-input" >
+        <span>Nombres</span>
+        <input type="text" formControlName="names">
+      </div>
+      <div class="form-input" >
+        <span>Apellidos</span>
+        <input type="text" formControlName="lastnames">
+      </div>
+      <div class="form-input" >
         <span>Email</span>
         <input type="email" formControlName="email">
       </div>
@@ -20,9 +28,22 @@
         <span>Numero de telefono</span>
         <input type="text" formControlName="phoneNumber">
       </div>
+      <div class="form-input">
+        <span>Fecha de nacimiento</span>
+        <br>
+        <select name="day" class="birthday" formControlName="day">
+          <option [value]="day" *ngFor="let day of days">{{day}}</option>
+        </select>
+        <select name="month" class="birthday" formControlName="month">
+          <option [value]="item.value" *ngFor="let item of months">{{item.label}}</option>
+        </select>
+        <select name="year" class="birthday" formControlName="year">
+          <option [value]="year" *ngFor="let year of years">{{year}}</option>
+        </select>
+      </div>
       <div class="space"></div>
       <div class="button-container">
-        <button class="checkButton">Verificar</button>
+        <button class="checkButton" [disabled]="formValidation.invalid" (click)="checkCustomerData()">Verificar</button>
       </div>
     </form>
   </div>

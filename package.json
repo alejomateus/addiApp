@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "dev": "ng s -o --port 4201",
+    "coverage": "ng test --watch=true --code-coverage",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
