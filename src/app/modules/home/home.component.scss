@@ -1,0 +1,17 @@
+.form {
+  padding: 10px 20px 10px 20px;
+  border-radius: 5px;
+  border-top: 1px solid green;
+  box-shadow: 0px 3px 10px 0px grey;
+  margin: 10px;
+}
+.space {
+  padding: 5px;
+}
+.button-container {
+  margin: auto;
+  text-align: center;
+  .checkButton {
+    width: 50%;
+  }
+}
