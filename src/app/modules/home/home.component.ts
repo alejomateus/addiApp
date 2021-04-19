@@ -136,14 +136,17 @@ export class HomeComponent implements OnInit {
       this.years.push(index);
     }
   }
-  async checkCustomerData(): Promise<any> {
+  /**
+   * checkCustomerData
+   */
+  checkCustomerData() {
     this.loading = true;
     const values = this.formValidation.value;
     this.validationService.validateProspect(values.identificationType, values.identificationNumber)
       .pipe(takeUntil(this.destroy$)).subscribe(async (value) => {
         this.prospect = value.exists;
         if (this.personJudicialRecords != undefined) {
-          this.getCustomerScore(values)
+          await this.getCustomerScore(values)
         }
       });
 
@@ -151,10 +154,14 @@ export class HomeComponent implements OnInit {
       .pipe(takeUntil(this.destroy$)).subscribe(async (value) => {
         this.personJudicialRecords = value.personJudicialRecords;
         if (this.prospect != undefined) {
-          this.getCustomerScore(values)
+          await this.getCustomerScore(values)
         }
       });
   }
+  /**
+   * getCustomerScore
+   * @param values formValues
+   */
   async getCustomerScore(values: any): Promise<any> {
     if (this.score <= 0) {
       if ((this.personJudicialRecords != undefined && this.personJudicialRecords.length == 0) &&
