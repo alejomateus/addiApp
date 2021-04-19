@@ -2,7 +2,6 @@
 @import "./styles/fonts.scss";
 @import "./styles/media-content.scss";
 
-
 .row::after {
   content: "";
   clear: both;
@@ -56,7 +55,6 @@
   .col-xs-12 {
     width: 100%;
   }
-
 }
 @include media-tablet {
   .col-sm-1 {
@@ -95,7 +93,6 @@
   .col-sm-12 {
     width: 100%;
   }
-
 }
 @include media-tablet-portrait-up {
   .col-md-1 {
@@ -134,7 +131,6 @@
   .col-md-12 {
     width: 100%;
   }
-
 }
 @include media-desktop {
   .col-lg-1 {
@@ -173,11 +169,10 @@
   .col-lg-12 {
     width: 100%;
   }
-
 }
 
 .footer {
-  background-color:#202844;
+  background-color: #202844;
   color: #ffffff;
   text-align: center;
   font-size: 12px;
@@ -226,5 +221,33 @@ input:focus,
 select:focus,
 textarea:focus,
 button:focus {
-    outline: none;
+  outline: none;
+  box-shadow: 0px 0px 10px 1px #3968af;
+}
+.form-errors {
+  span {
+    padding: 5px;
+    color: red;
+    font-size: 15px;
+  }
+}
+.incorrect-validation {
+  padding: 15px;
+  text-align: center;
+  span {
+    padding: 5px;
+    color: red;
+    font-size: 15px;
+    display: block;
+  }
+}
+.correct-validation {
+  padding: 15px;
+  text-align: center;
+  span {
+    text-transform: uppercase;
+    color: green;
+    font-size: 15px;
+    font-weight: bolder;
+  }
 }

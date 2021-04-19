@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { ValidationService } from 'src/app/services/validation.service';
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-home',
@@ -7,6 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  destroy$: Subject<boolean> = new Subject<boolean>();
   identificationTypes: Array<any> = [
     {
       label: "Cedula de Ciudadania",
@@ -71,7 +75,42 @@ export class HomeComponent implements OnInit {
     },
 
   ];
+  prospect: any = undefined;
+  personJudicialRecords: any = undefined;
+  score: number = 0;
   years: Array<any> = [];
+  loading: boolean = false;
+  validationMessages: FormValidationMessages = {
+    names: [
+      { type: 'required', message: 'Debe ingresar el nombre' }
+    ],
+    lastnames: [
+      { type: 'required', message: 'Debe ingresar el apellido' }
+    ],
+    email: [
+      { type: 'required', message: 'Debe ingresar el email' },
+      { type: 'pattern', message: 'Debe ingresar un email valido' }
+
+    ],
+    identificationType: [
+      { type: 'required', message: 'Debe ingresar el tipo de identificacion' }
+    ],
+    identificationNumber: [
+      { type: 'required', message: 'Debe ingresar el numero de identificacion' }
+    ],
+    phoneNumber: [
+      { type: 'required', message: 'Debe ingresar el numero de telefono' }
+    ],
+    day: [
+      { type: 'required', message: 'Debe ingresar el dia de nacimiento' }
+    ],
+    month: [
+      { type: 'required', message: 'Debe ingresar el mes de nacimiento' }
+    ],
+    year: [
+      { type: 'required', message: 'Debe ingresar el año de nacimiento' }
+    ],
+  };
   formValidation: FormGroup = new FormGroup({
     names: new FormControl('', [Validators.required]),
     lastnames: new FormControl('', [Validators.required]),
@@ -90,7 +129,7 @@ export class HomeComponent implements OnInit {
 
   });
 
-  constructor() { }
+  constructor(private validationService: ValidationService) { }
 
   ngOnInit(): void {
     for (let index = 1900; index <= 2021; index++) {
@@ -98,8 +137,49 @@ export class HomeComponent implements OnInit {
     }
   }
   async checkCustomerData(): Promise<any> {
-    console.log("method");
+    this.loading = true;
+    const values = this.formValidation.value;
+    this.validationService.validateProspect(values.identificationType, values.identificationNumber)
+      .pipe(takeUntil(this.destroy$)).subscribe(async (value) => {
+        this.prospect = value.exists;
+        if (this.personJudicialRecords != undefined) {
+          this.getCustomerScore(values)
+        }
+      });
 
+    this.validationService.validateJudicialReports(values.identificationType, values.identificationNumber)
+      .pipe(takeUntil(this.destroy$)).subscribe(async (value) => {
+        this.personJudicialRecords = value.personJudicialRecords;
+        if (this.prospect != undefined) {
+          this.getCustomerScore(values)
+        }
+      });
+  }
+  async getCustomerScore(values: any): Promise<any> {
+    if (this.score <= 0) {
+      if ((this.personJudicialRecords != undefined && this.personJudicialRecords.length == 0) &&
+        (this.prospect != undefined && this.prospect)) {
+        let value = await this.validationService.getScore(values.identificationType, values.identificationNumber)
+          .pipe(takeUntil(this.destroy$)).toPromise();
+        this.score = JSON.parse(JSON.stringify(value)).score;
+      }
+    }
+    this.loading = false;
   }
 
+}
+export interface FormValidationMessages {
+  names: ValidationMessages[];
+  lastnames: ValidationMessages[];
+  email: ValidationMessages[];
+  identificationType: ValidationMessages[];
+  identificationNumber: ValidationMessages[];
+  phoneNumber: ValidationMessages[];
+  day: ValidationMessages[];
+  month: ValidationMessages[];
+  year: ValidationMessages[];
+}
+export interface ValidationMessages {
+  type: string;
+  message: string;
 }
