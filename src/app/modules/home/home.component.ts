@@ -162,6 +162,9 @@ export class HomeComponent implements OnInit {
         let value = await this.validationService.getScore(values.identificationType, values.identificationNumber)
           .pipe(takeUntil(this.destroy$)).toPromise();
         this.score = JSON.parse(JSON.stringify(value)).score;
+      } else {
+        this.prospect = undefined;
+        this.personJudicialRecords = undefined;
       }
     }
     this.loading = false;
