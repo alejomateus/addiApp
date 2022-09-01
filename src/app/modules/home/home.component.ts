@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
 
   ];
   prospect: any = undefined;
-  personJudicialRecords: any = undefined;
+  personJudicialRecords:any []= [];
   score: number = 0;
   years: Array<any> = [];
   loading: boolean = false;
@@ -178,18 +178,4 @@ export class HomeComponent implements OnInit {
   }
 
 }
-export interface FormValidationMessages {
-  names: ValidationMessages[];
-  lastnames: ValidationMessages[];
-  email: ValidationMessages[];
-  identificationType: ValidationMessages[];
-  identificationNumber: ValidationMessages[];
-  phoneNumber: ValidationMessages[];
-  day: ValidationMessages[];
-  month: ValidationMessages[];
-  year: ValidationMessages[];
-}
-export interface ValidationMessages {
-  type: string;
-  message: string;
-}
+
